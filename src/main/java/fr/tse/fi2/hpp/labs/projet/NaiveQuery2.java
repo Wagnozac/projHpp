@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.lang.Math;
 
 import fr.tse.fi2.hpp.labs.beans.DebsRecord;
@@ -31,7 +33,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	// variables for getEmptyTaxis 
 	private static long epsilon = 1800000;// 30 min en millisecondes.
 	private static List<DebsRecord> currentTaxisPick ;
-	private static List<QuadrupleTimeGridTaxi> gridAndTaxis;
+	private static List<QuadTimeGridTaxi> gridAndTaxis;
 	
 	
 	public NaiveQuery2(QueryProcessorMeasure measure) {
@@ -44,7 +46,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		emptyTaxis=new ArrayList<PaireGridTaxi>();
 		//currentTaxis=new ArrayList<DebsRecord>();
 		currentTaxisPick=new ArrayList<DebsRecord>();
-		gridAndTaxis=new ArrayList<QuadrupleTimeGridTaxi>();
+		gridAndTaxis=new ArrayList<QuadTimeGridTaxi>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -59,7 +61,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		mostProfitableAreas.clear();
 		getMostProfitableAreas(record);
 		long delayEnd = System.nanoTime();
-		System.out.println(delayEnd-delayStart);
+		suffixe=", "+(delayEnd-delayStart);
 		
 		ecrireQuery2(record);
 		
@@ -73,36 +75,25 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	{
 		medianFare.clear();
 		currentRecs.add(record);
+		
+	
+		while (record.getDropoff_datetime()>currentRecs.get(0).getDropoff_datetime()+delta)
+		{
+			currentRecs.remove(0);
+		}
 		int size =currentRecs.size();
-		List<Integer> ind=new ArrayList<Integer>(); 
 		
 		// Here we fill the current records and we remove the ones which are too old
 		for (int i = 0; i< size;i++)
 		{
-			if (record.getDropoff_datetime()>currentRecs.get(i).getDropoff_datetime()+delta)
-			{
-				ind.add(i);
-			}
-			else
-			{
+			
+
 			GridPoint coord = convert(currentRecs.get(i).getPickup_latitude(),currentRecs.get(i).getPickup_longitude());
 			PaireGridMoney paireGridMoney = new PaireGridMoney(coord,currentRecs.get(i).getTip_amount()+currentRecs.get(i).getFare_amount());
 			gridAndMoney.add(paireGridMoney);
-			}
-			
-		if (ind.size()==0)
-			{
-			
-			}
-		else
-		{
-			for (int j=ind.size()-1; j>=0;j--)
-				{
-					currentRecs.remove(ind.get(j));
-				}
-		}
 			
 			
+				
 		}
 		
 		// this allows us to find the median fares of the GridPoint present in the current Records
@@ -135,39 +126,31 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	public static void getEmptyTaxis( DebsRecord record)
 	{
 		
-		List<Integer> ind=new ArrayList<Integer>();
 		
 		// Here we fill the current Taxis which picked and we remove the ones which are too old
+		
 		currentTaxisPick.add(record);
+		
+
+		while (record.getDropoff_datetime()>currentTaxisPick.get(0).getPickup_datetime()+epsilon)
+		{
+			currentTaxisPick.remove(0);
+		}
+		
 		int sizePick =currentTaxisPick.size();
 		for (int i = 0; i< sizePick;i++)
 		{
-			if (record.getDropoff_datetime()>currentTaxisPick.get(i).getPickup_datetime()+epsilon)
-			{
-				ind.add(i);
-			}
+
 			
-			else
-			{
+		
+			
 			long tempsP = currentTaxisPick.get(i).getPickup_datetime();
 			long tempsD = currentTaxisPick.get(i).getDropoff_datetime();
 			GridPoint coordDrop = convert(currentTaxisPick.get(i).getDropoff_latitude(),currentTaxisPick.get(i).getDropoff_longitude());
-			QuadrupleTimeGridTaxi quadrupleTimeGridTaxi = new QuadrupleTimeGridTaxi(tempsP,tempsD,coordDrop,currentTaxisPick.get(i).getMedallion());
-			gridAndTaxis.add(quadrupleTimeGridTaxi);
-			}
+			QuadTimeGridTaxi quadTimeGridTaxi = new QuadTimeGridTaxi(tempsP,tempsD,coordDrop,currentTaxisPick.get(i).getMedallion());
+			gridAndTaxis.add(quadTimeGridTaxi);
 			
-			if (ind.size()==0)
-			{
-				
-			}
-			else
-			{
-				for (int j=ind.size()-1;j>=0;j--)
-					{
-						currentTaxisPick.remove(ind.get(j));
-						
-					}
-			}
+			
 			
 		}
 		
@@ -226,36 +209,48 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	{
 		
 	
-		List<GridPoint> medianFareGrid=new ArrayList<GridPoint>();
-		List<GridPoint> emptyTaxisGrid=new ArrayList<GridPoint>();
+		Map<Integer,GridPoint> medianFareGrid=new HashMap<Integer,GridPoint>();
+		Map<Integer,GridPoint> emptyTaxisGrid=new HashMap<Integer,GridPoint>();
 		
 		for (int i = 0; i<medianFare.size();i++)
 			{
-				medianFareGrid.add(medianFare.get(i).getGrid());
-				System.out.println("valeur: "+medianFareGrid.get(i).getX() + " " + medianFareGrid.get(i).getY());
+				medianFareGrid.put(i,medianFare.get(i).getGrid());
+
 			}
 			
 		for (int j=0; j<emptyTaxis.size();j++)
 			{
-				emptyTaxisGrid.add(emptyTaxis.get(j).getGrid());
+				emptyTaxisGrid.put(j,emptyTaxis.get(j).getGrid());
+				//System.out.println("taxi X : " + emptyTaxis.get(j).getGrid().getX() +"taxi Y : " + emptyTaxis.get(j).getGrid().getY());
 			}
 			
 		int ii=0;
-		System.out.println("emptytaxgrid"+emptyTaxisGrid.size());
-		System.out.println("medianfaregrid"+medianFareGrid.size());
+		//System.out.println("Taille empty taxis : " + emptyTaxis.size());
+		
+		//System.out.println("Taille median fare : " + medianFare.size());
+
 		while (emptyTaxis.size()!=medianFare.size())
 		{
-			System.out.println(ii);
-			System.out.println("emptytax"+emptyTaxis.size());
-			System.out.println("medianfare"+medianFare.size());
 			
-			if (!emptyTaxisGrid.contains(medianFareGrid.get(ii)))
+			if (emptyTaxis.size()>medianFare.size())
+			{
+				if (!medianFareGrid.containsValue(emptyTaxisGrid.get(ii)))
+						{
+								emptyTaxis.remove(ii);
+						}
+			}
+			
+			else if (!emptyTaxisGrid.containsValue(medianFareGrid.get(ii)))
 			{
 				emptyTaxis.add(new PaireGridTaxi(medianFare.get(ii).getGrid(),0));
+				//System.out.println("X: "+emptyTaxis.get(ii).getGrid().getX()+ " Y: "+ emptyTaxis.get(ii).getGrid().getY());
 				ii++;
+				
 			}
 			else
 			{
+				
+				
 				ii++;
 			}	
 		}

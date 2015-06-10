@@ -2,13 +2,13 @@ package fr.tse.fi2.hpp.labs.projet;
 
 import fr.tse.fi2.hpp.labs.beans.GridPoint;
 
-public class QuadrupleTimeGridTaxi {
+public class QuadTimeGridTaxi {
 	
     long tempsPick;
     long tempsDrop;
     GridPoint gridDrop;
     String taxi;
-	public QuadrupleTimeGridTaxi(long tempsPick, long tempsDrop,
+	public QuadTimeGridTaxi(long tempsPick, long tempsDrop,
 			GridPoint gridDrop, String taxi) {
 		super();
 		this.tempsPick = tempsPick;

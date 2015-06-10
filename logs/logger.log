@@ -1,4 +1,3 @@
-[16:55:52] [INFO ] (StreamingDispatcher.java:run:29) Starting dispatcher
-[16:55:52] [INFO ] (AbstractQueryProcessor.java:run:115) Starting query processor 1
-[16:55:53] [INFO ] (StreamingDispatcher.java:run:48) Sending poison pill
-[16:55:57] [INFO ] (AbstractQueryProcessor.java:run:136) Closing query processor 1
+[18:53:23] [INFO ] (StreamingDispatcher.java:run:29) Starting dispatcher
+[18:53:23] [INFO ] (AbstractQueryProcessor.java:run:115) Starting query processor 1
+[18:53:28] [INFO ] (StreamingDispatcher.java:run:48) Sending poison pill
