@@ -20,6 +20,7 @@ public class Query1 extends AbstractQueryProcessor {
 	private List<Route> currentBest_;
 	private boolean found;
 	private boolean changement;
+	private DateFormat df;
 	
 	
 	public Query1(QueryProcessorMeasure measure) {
@@ -30,13 +31,16 @@ public class Query1 extends AbstractQueryProcessor {
 		currentBest_ = new ArrayList<>();
 		//currentBest_.add(new Route(new GridPoint(-1, -1),new GridPoint(-1, -1)));
 		changement = false;
+		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	@Override
 	protected void process(DebsRecord record) {
-		// TODO Auto-generated method stub
-		rec_.add(record);
+		// ***** Début mesure du delay *****
+		long delayStart = System.nanoTime();
 		
+		
+		rec_.add(record);
 		List<Integer> temp = new ArrayList<Integer>();
 		Route r = this.convertRecordToRoute2(record);
 		
@@ -66,8 +70,7 @@ public class Query1 extends AbstractQueryProcessor {
 					// ***** Si la route n'existe pas déjà, on l'ajoute *****
 					if (!found)
 					{
-						route_.add(new TripletRouteOccClass(r,1));
-						
+						route_.add(new TripletRouteOccClass(r,1));						
 					}
 					else
 						found=false;					
@@ -143,8 +146,7 @@ public class Query1 extends AbstractQueryProcessor {
 				
 				// ***** Formatage de la date pour écriture dans le fichier *****
 				Date pickup = new Date(record.getPickup_datetime());
-				Date dropoff = new Date(record.getDropoff_datetime());
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date dropoff = new Date(record.getDropoff_datetime());				
 				
 				// ***** Début de la ligne *****
 				String line = ""+df.format(pickup).toString()+","+ df.format(dropoff).toString();
@@ -159,8 +161,9 @@ public class Query1 extends AbstractQueryProcessor {
 				// ***** Ajout de la fin de la ligne en cas de taille <10 *****
 				line = line+finLigne;
 				
+				long delay = System.nanoTime() - delayStart;
 				// ***** Ecriture grâce au thread *****
-				writeQuery1(line);
+				writeQuery1(line + "," + delay);
 			}
 		}
 
