@@ -31,4 +31,43 @@ public class DuoRouteOcc {
 		this.nbOcc_++;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((route_ == null) ? 0 : route_.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DuoRouteOcc) && !(obj instanceof Route))
+			return false;
+		if (obj instanceof DuoRouteOcc)
+		{
+			DuoRouteOcc other = (DuoRouteOcc) obj;
+			if (route_ == null) {
+				if (other.route_ != null)
+					return false;
+			} else if (!route_.equals(other.route_))
+				return false;
+		}
+		else
+		{
+			Route other = (Route) obj;
+			if (route_ == null) {
+				if (other != null)
+					return false;
+			} else if (!route_.equals(other))
+				return false;
+		}
+		return true;
+	}
+	
+	
+
 }
