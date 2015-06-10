@@ -10,11 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.StreamingDispatcher;
-<<<<<<< HEAD
 import fr.tse.fi2.hpp.labs.projet.NaiveQuery2;
-=======
-import fr.tse.fi2.hpp.labs.projet.Query1v2;
->>>>>>> 68230219583a2ab61b0de5e5f7605d1b4408cc43
 import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 
 /**
@@ -38,23 +34,16 @@ public class MainStreaming {
 		// Init query time measure
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher
-		StreamingDispatcher dispatch = new StreamingDispatcher(
-<<<<<<< HEAD
-				"src/main/resources/data/test_03.csv");
-=======
-				"src/main/resources/data/test_01.csv");
->>>>>>> 68230219583a2ab61b0de5e5f7605d1b4408cc43
+		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/test_03.csv");
+
 
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();
 		// Add you query processor here
-<<<<<<< HEAD
+
 		NaiveQuery2 q = new NaiveQuery2(measure);
 		processors.add(q);
-=======
-		Query1v2 m = new Query1v2(measure);
-		processors.add(m);
->>>>>>> 68230219583a2ab61b0de5e5f7605d1b4408cc43
+
 		
 		// Register query processors
 		for (AbstractQueryProcessor queryProcessor : processors) {

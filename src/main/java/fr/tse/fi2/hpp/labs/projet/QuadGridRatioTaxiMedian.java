@@ -66,9 +66,9 @@ public class QuadGridRatioTaxiMedian implements Comparable {
 
 		float nombre1=((QuadGridRatioTaxiMedian) other).getRatio();
 		float nombre2=this.getRatio();
-	    if (nombre1 > nombre2)  return -1; 
+	    if (nombre1 > nombre2)  return 1; 
 	    else if(nombre1 == nombre2) return 0; 
-	    else return 1; 
+	    else return -1; 
 
 	   
 	}
