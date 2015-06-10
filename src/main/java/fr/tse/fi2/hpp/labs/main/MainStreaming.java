@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.StreamingDispatcher;
+import fr.tse.fi2.hpp.labs.projet.NaiveQuery2;
 import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 import fr.tse.fi2.hpp.labs.queries.impl.Lab5.BloomPlease;
 
@@ -35,12 +36,12 @@ public class MainStreaming {
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher
 		StreamingDispatcher dispatch = new StreamingDispatcher(
-				"src/main/resources/data/1000Records.csv");
+				"src/main/resources/data/test_03.csv");
 
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();
 		// Add you query processor here
-		BloomPlease q = new BloomPlease(measure,1000,0.001);
+		NaiveQuery2 q = new NaiveQuery2(measure);
 		processors.add(q);
 		
 		// Register query processors

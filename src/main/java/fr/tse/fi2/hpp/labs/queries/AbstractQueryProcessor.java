@@ -14,6 +14,7 @@ import fr.tse.fi2.hpp.labs.beans.Route;
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.StreamingDispatcher;
 import fr.tse.fi2.hpp.labs.projet.ThreadWriter1;
+import fr.tse.fi2.hpp.labs.projet.ThreadWriter2;
 import fr.tse.fi2.hpp.labs.queries.impl.Lab3.ThreadWriter;
 
 /**
@@ -59,7 +60,7 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	public Thread threadQ1;
 	
 	public final LinkedBlockingQueue<String> query2;
-	public ThreadWriter1 tw2;
+	public ThreadWriter2 tw2;
 	public Thread threadQ2;
 	
 	/**
@@ -96,7 +97,7 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		threadQ1.start();
 		
 		this.query2=new LinkedBlockingQueue<String>();
-		tw2= new ThreadWriter1(query2);
+		tw2= new ThreadWriter2(query2);
 		threadQ2 = new Thread(tw2);
 		threadQ2.start();
 		
