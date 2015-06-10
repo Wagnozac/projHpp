@@ -58,6 +58,10 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	public ThreadWriter1 tw1;
 	public Thread threadQ1;
 	
+	public final LinkedBlockingQueue<String> query2;
+	public ThreadWriter1 tw2;
+	public Thread threadQ2;
+	
 	/**
 	 * Global measurement
 	 */
@@ -90,6 +94,12 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		tw1= new ThreadWriter1(query1);
 		threadQ1 = new Thread(tw1);
 		threadQ1.start();
+		
+		this.query2=new LinkedBlockingQueue<String>();
+		tw2= new ThreadWriter1(query2);
+		threadQ2 = new Thread(tw2);
+		threadQ2.start();
+		
 		
 		// Initialize writer
 
@@ -168,7 +178,7 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 * @param long1
 	 * @return The lat/long converted into grid coordinates
 	 */
-	protected GridPoint convert(float lat1, float long1) {
+	protected static GridPoint convert(float lat1, float long1) {
 		return new GridPoint(cellX(long1), cellY(lat1));
 	}
 	
@@ -182,7 +192,7 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 * @param x
 	 * @return
 	 */
-	private int cellX(float x) {
+	private static int cellX(float x) {
 
 		// double x=0;
 		double x_0 = -74.913585;
@@ -212,7 +222,7 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 * @param y
 	 * @return
 	 */
-	private int cellY(double y) {
+	private static int cellY(double y) {
 
 		double y_0 = 41.474937;
 		double delta_y = 0.004491556 / 2;
@@ -257,11 +267,17 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	protected void writeQuery1(String line){
 		query1.add(line);
 	}
+	
+	protected void writeQuery2(String line){
+		query2.add(line);
+	}
+	
 	protected void finish(){
 		measure.notifyFinish(this.id);
 		latch.countDown();
 		Thread1.poison=true;
 		tw1.add("poison");
+		tw2.add("poison");
 	}
 
 }
