@@ -21,13 +21,14 @@
 //import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 //import fr.tse.fi2.hpp.labs.dispatcher.StreamingDispatcher;
 //import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
+//import fr.tse.fi2.hpp.labs.queries.impl.Lab4.MembershipQuery;
 //
 //
 //
 ////@State (Scope.Thread)
 //public class Benchmarkark {
 //	
-//	/*final static Logger logger = LoggerFactory.getLogger(Benchmarkark.class);
+//	final static Logger logger = LoggerFactory.getLogger(Benchmarkark.class);
 //	private MembershipQuery q;
 //	
 //	@Setup
@@ -92,7 +93,7 @@
 //		boolean res =q.searchRec(-73.956528f, 40.716976f, -73.962440f, 40.715008f, "chocolat");
 //		return res;
 //		
-//	}*/
+//	}
 //}
 //	
 //
