@@ -2,12 +2,12 @@ package fr.tse.fi2.hpp.labs.projet;
 
 import fr.tse.fi2.hpp.labs.beans.Route;
 
-public class TripletRouteOccClass {
+public class DuoRouteOcc {
 
 	private Route route_;
 	private int nbOcc_;
 	
-	public TripletRouteOccClass(Route r, int nb) {
+	public DuoRouteOcc(Route r, int nb) {
 		// TODO Auto-generated constructor stub
 		this.route_=r;
 		this.nbOcc_=nb;

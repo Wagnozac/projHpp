@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -13,17 +12,16 @@ import fr.tse.fi2.hpp.labs.beans.Route;
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 
-public class Query1 extends AbstractQueryProcessor {
+public class Query1v2 extends AbstractQueryProcessor {
 
 	private List<DebsRecord> rec_=null;
 	private List<DuoRouteOcc> route_;
 	private List<Route> currentBest_;
 	private boolean found;
 	private boolean changement;
-	private DateFormat df;
+	private final DateFormat df;
 	
-	
-	public Query1(QueryProcessorMeasure measure) {
+	public Query1v2(QueryProcessorMeasure measure) {
 		super(measure);
 		rec_= new ArrayList<>();
 		route_= new ArrayList<>();
@@ -38,70 +36,54 @@ public class Query1 extends AbstractQueryProcessor {
 		// ***** Début mesure du delay *****
 		long delayStart = System.nanoTime();
 		
-		
-		rec_.add(record);
-		List<Integer> temp = new ArrayList<Integer>();
 		Route r = this.convertRecordToRoute2(record);
 		
+		
+		
 		// ***** La route est-elle dans la grille ? *****
-		if(!r.isValid(300))
+		if(r.isValid(300))
 		{
-			rec_.remove(rec_.size()-1);
-		}
-		else
-		{
+			rec_.add(record);
+			
+			// ***** Suppression des records superflus
+			while (record.getDropoff_datetime() > rec_.get(0).getDropoff_datetime()+1800000)
+			{
+				rec_.remove(0);
+			}
+			
 			// ***** Parcours liste de records *****
 			for (int i=0; i<rec_.size();i++)
-			{
-				// ***** Test si on est dans la bonne fenêtre temporelle *****
-				if (record.getDropoff_datetime() <= rec_.get(i).getDropoff_datetime()+1800000)
-				{				
-					// ***** Parcours de la liste de routes *****
-					for (int j=0;j<route_.size();j++)
+			{			
+				// ***** Parcours de la liste de routes *****
+				for (int j=0;j<route_.size();j++)
+				{
+					// ****** Test si les deux routes sont les mêmes *****
+					if (route_.get(j).getRoute().equals(r))
 					{
-						// ****** Test si les deux routes sont les mêmes *****
-						if (route_.get(j).getRoute().equals(r))
-						{
-							route_.get(j).incrementRouteOcc();
-							found=true;
-						}
+						route_.get(j).incrementRouteOcc();
+						found=true;
+						break;
 					}
-					// ***** Si la route n'existe pas déjà, on l'ajoute *****
-					if (!found)
-					{
-						route_.add(new DuoRouteOcc(r,1));						
-					}
-					else
-						found=false;					
+				}
+				// ***** Si la route n'existe pas déjà, on l'ajoute *****
+				if (!found)
+				{
+					route_.add(new DuoRouteOcc(r,1));						
 				}
 				else
-				{
-					// ***** Stockage des indices des records superflus *****
-					temp.add(i);
-				}
-	
+					found=false;	
 			}
-			// ***** Suppression des records superflus *****
-			for (int i=temp.size()-1;i>=0;i--)
-			{
-				rec_.remove(temp.get(i));
-			}
+
 			
 			// ***** On trie la liste de route en fonction du nombre d'occurences par ordre décroissant *****
-			Collections.sort(route_, new Comparator<DuoRouteOcc>()
-					{
-						public int compare(DuoRouteOcc o1, DuoRouteOcc o2) 
-						{
-							if (o1.getNbOcc() > o2.getNbOcc())
-								return -1;
-							else if (o1.getNbOcc() < o2.getNbOcc())
-								return 1;
-							else return 0;
-						}			
-					});
+			Collections.sort(route_, new ComparateurDuoRouteOcc());
+			
+			// ***** Gestion des cas ou on a plus de 10 routes *****
+			if (route_.size()>10)
+				route_.subList(10, route_.size()).clear();
 			
 			// ***** Vérification si changement des routes les plus fréquentes *****
-			if (currentBest_.size()< route_.size())
+			if (currentBest_.size() != route_.size())
 				changement = true;
 			else
 			{
@@ -125,21 +107,23 @@ public class Query1 extends AbstractQueryProcessor {
 					for (int i = route_.size();i<10;i++)
 						finLigne=finLigne+",NULL";
 				}
-				// ***** Gestion cas plus de 10 routes *****
-				else if(route_.size()>10)
-				{
-					route_.subList(10, route_.size()).clear();
-				}
 				
 				// ***** Actualisation des meilleurs routes *****
-				for (int i=0; i < currentBest_.size(); i++)
+				if (currentBest_.size() <= route_.size())
 				{
-					currentBest_.set(i, route_.get(i).getRoute());
+					for (int i=0; i < currentBest_.size(); i++)
+						currentBest_.set(i, route_.get(i).getRoute());
+					
+					for (int i=currentBest_.size(); i < route_.size(); i++)
+						currentBest_.add(route_.get(i).getRoute());
 				}
-				for (int i=currentBest_.size(); i < route_.size(); i++)
+				else
 				{
-					currentBest_.add(route_.get(i).getRoute());
+					for (int i = 0; i < route_.size(); i++)
+						currentBest_.set(i, route_.get(i).getRoute());
+					currentBest_.subList(route_.size(), currentBest_.size()).clear();
 				}
+					
 				// ***** Réinitialisation du booléen *****
 				changement = false;
 				
