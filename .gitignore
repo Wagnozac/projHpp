@@ -5,6 +5,8 @@
 .metadata/
 target/
 bin/
+result/
+src/main/resources/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

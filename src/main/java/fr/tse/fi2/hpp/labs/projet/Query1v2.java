@@ -53,25 +53,26 @@ public class Query1v2 extends AbstractQueryProcessor {
 			
 			// ***** Parcours liste de records *****
 			for (int i=0; i<rec_.size();i++)
-			{			
-				// ***** Parcours de la liste de routes *****
-				for (int j=0;j<route_.size();j++)
-				{
-					// ****** Test si les deux routes sont les mêmes *****
-					if (route_.get(j).getRoute().equals(r))
-					{
-						route_.get(j).incrementRouteOcc();
-						found=true;
-						break;
-					}
-				}
-				// ***** Si la route n'existe pas déjà, on l'ajoute *****
-				if (!found)
-				{
-					route_.add(new DuoRouteOcc(r,1));						
-				}
-				else
-					found=false;	
+			{
+				
+//				// ***** Parcours de la liste de routes *****
+//				for (int j=0;j<route_.size();j++)
+//				{
+//					// ****** Test si les deux routes sont les mêmes *****
+//					if (route_.get(j).getRoute().equals(r))
+//					{
+//						route_.get(j).incrementRouteOcc();
+//						found=true;
+//						break;
+//					}
+//				}
+//				// ***** Si la route n'existe pas déjà, on l'ajoute *****
+//				if (!found)
+//				{
+//					route_.add(new DuoRouteOcc(r,1));						
+//				}
+//				else
+//					found=false;	
 			}
 
 			

@@ -16,5 +16,7 @@ public class ComparateurDuoRouteOcc implements Comparator<DuoRouteOcc> {
 			return 1;
 		else return 0;
 	}
+	
+	
 
 }
