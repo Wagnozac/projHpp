@@ -16,28 +16,25 @@ public class Query1v2 extends AbstractQueryProcessor {
 
 	private List<DebsRecord> rec_=null;
 	private List<DuoRouteOcc> route_;
-	private List<Route> currentBest_;
-	private boolean found;
-	private boolean changement;
+	private List<DuoRouteOcc> currentBest_;
 	private final DateFormat df;
 	
 	public Query1v2(QueryProcessorMeasure measure) {
 		super(measure);
-		rec_= new ArrayList<>();
-		route_= new ArrayList<>();
-		found = false;
-		currentBest_ = new ArrayList<>();
-		changement = false;
+		rec_= new ArrayList<DebsRecord>();
+		route_= new ArrayList<DuoRouteOcc>();
+		currentBest_ = new ArrayList<DuoRouteOcc>();
 		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	@Override
 	protected void process(DebsRecord record) {
+		
 		// ***** Début mesure du delay *****
 		long delayStart = System.nanoTime();
 		
 		Route r = this.convertRecordToRoute2(record);
-		
+		DuoRouteOcc currentDuo = new DuoRouteOcc(r,1);
 		
 		
 		// ***** La route est-elle dans la grille ? *****
@@ -54,25 +51,18 @@ public class Query1v2 extends AbstractQueryProcessor {
 			// ***** Parcours liste de records *****
 			for (int i=0; i<rec_.size();i++)
 			{
-				
-				// ***** Parcours de la liste de routes *****
-				for (int j=0;j<route_.size();j++)
+				// ***** Test si la route est présente et à quel indice *****
+				int ind = route_.indexOf(currentDuo);
+				if(ind != -1)
 				{
-					// ****** Test si les deux routes sont les mêmes *****
-					if (route_.get(j).getRoute().equals(r))
-					{
-						route_.get(j).incrementRouteOcc();
-						found=true;
-						break;
-					}
-				}
-				// ***** Si la route n'existe pas déjà, on l'ajoute *****
-				if (!found)
-				{
-					route_.add(new DuoRouteOcc(r,1));						
+					// ***** Si route déjà présente on incrémente son nombre d'occurence *****
+					route_.get(ind).incrementRouteOcc();
 				}
 				else
-					found=false;	
+				{
+					// ***** Sinon on l'ajoute à la liste *****
+					route_.add(currentDuo);
+				}	
 			}
 
 			
@@ -83,23 +73,9 @@ public class Query1v2 extends AbstractQueryProcessor {
 			if (route_.size()>10)
 				route_.subList(10, route_.size()).clear();
 			
-			// ***** Vérification si changement des routes les plus fréquentes *****
-			if (currentBest_.size() != route_.size())
-				changement = true;
-			else
-			{
-				for (int i=0; i < currentBest_.size(); i++)
-				{
-					if (!currentBest_.get(i).equals(route_.get(i).getRoute()))
-					{
-						changement = true;
-						break;
-					}
-				}
-			}
 			
-			// ****** Traitement en cas de changement *****
-			if (changement)
+			// ***** Vérification si changement des routes les plus fréquentées *****
+			if (!currentBest_.equals(route_))
 			{
 				// ***** Gestion cas moins de 10 routes *****
 				String finLigne="";
@@ -113,21 +89,19 @@ public class Query1v2 extends AbstractQueryProcessor {
 				if (currentBest_.size() <= route_.size())
 				{
 					for (int i=0; i < currentBest_.size(); i++)
-						currentBest_.set(i, route_.get(i).getRoute());
+						currentBest_.set(i, route_.get(i));
 					
 					for (int i=currentBest_.size(); i < route_.size(); i++)
-						currentBest_.add(route_.get(i).getRoute());
+						currentBest_.add(route_.get(i));
 				}
 				else
 				{
 					for (int i = 0; i < route_.size(); i++)
-						currentBest_.set(i, route_.get(i).getRoute());
+						currentBest_.set(i, route_.get(i));
 					currentBest_.subList(route_.size(), currentBest_.size()).clear();
 				}
+			
 					
-				// ***** Réinitialisation du booléen *****
-				changement = false;
-				
 				// ***** Formatage de la date pour écriture dans le fichier *****
 				Date pickup = new Date(record.getPickup_datetime());
 				Date dropoff = new Date(record.getDropoff_datetime());				
@@ -145,7 +119,9 @@ public class Query1v2 extends AbstractQueryProcessor {
 				// ***** Ajout de la fin de la ligne en cas de taille <10 *****
 				line = line+finLigne;
 				
+				// ***** Calcul du temps de traitement *****
 				long delay = System.nanoTime() - delayStart;
+				
 				// ***** Ecriture grâce au thread *****
 				writeQuery1(line + "," + delay);
 			}

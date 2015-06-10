@@ -100,7 +100,7 @@ public class Route {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Route))
+		if (getClass() != obj.getClass())
 			return false;
 		Route other = (Route) obj;
 		if (dropoff == null) {
@@ -115,21 +115,4 @@ public class Route {
 			return false;
 		return true;
 	}
-	
-	/*@Override
-	public boolean equals(Object other)
-	{
-		if (other == null) return false;
-	    if (other == this) return true;
-	    if (!(other instanceof Route))return false;
-	    Route r = (Route)other;
-	    if (this.getPickup().getX() == r.getPickup().getX() && this.getPickup().getY() == r.getPickup().getY()
-	    		&& this.getDropoff().getX() == r.getDropoff().getX() && this.getDropoff().getY() == r.getDropoff().getY())
-	    	return true;
-	    else return false;
-
-	}*/
-	
-	
-
 }

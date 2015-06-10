@@ -45,29 +45,14 @@ public class DuoRouteOcc {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof DuoRouteOcc) && !(obj instanceof Route))
+		if (getClass() != obj.getClass())
 			return false;
-		if (obj instanceof DuoRouteOcc)
-		{
-			DuoRouteOcc other = (DuoRouteOcc) obj;
-			if (route_ == null) {
-				if (other.route_ != null)
-					return false;
-			} else if (!route_.equals(other.route_))
+		DuoRouteOcc other = (DuoRouteOcc) obj;
+		if (route_ == null) {
+			if (other.route_ != null)
 				return false;
-		}
-		else
-		{
-			Route other = (Route) obj;
-			if (route_ == null) {
-				if (other != null)
-					return false;
-			} else if (!route_.equals(other))
-				return false;
-		}
+		} else if (!route_.equals(other.route_))
+			return false;
 		return true;
 	}
-	
-	
-
 }
