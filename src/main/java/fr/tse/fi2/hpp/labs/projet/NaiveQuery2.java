@@ -30,7 +30,6 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	
 	// variables for getEmptyTaxis 
 	private static long epsilon = 1800000;// 30 min en millisecondes.
-	private static List<DebsRecord> currentTaxis ;
 	private static List<DebsRecord> currentTaxisPick ;
 	private static List<QuadrupleTimeGridTaxi> gridAndTaxis;
 	
@@ -43,7 +42,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		medianFare=new ArrayList<PaireGridMoney>();
 		mostProfitableAreas=new ArrayList<QuadGridRatioTaxiMedian>();
 		emptyTaxis=new ArrayList<PaireGridTaxi>();
-		currentTaxis=new ArrayList<DebsRecord>();
+		//currentTaxis=new ArrayList<DebsRecord>();
 		currentTaxisPick=new ArrayList<DebsRecord>();
 		gridAndTaxis=new ArrayList<QuadrupleTimeGridTaxi>();
 		// TODO Auto-generated constructor stub
@@ -52,9 +51,16 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	@Override
 	protected void process(DebsRecord record) {
 		// TODO Auto-generated method stub
+		long delayStart = System.nanoTime();
+		medianFare.clear();
 		getMedianFare(record);
+		emptyTaxis.clear();
 		getEmptyTaxis(record);
+		mostProfitableAreas.clear();
 		getMostProfitableAreas(record);
+		long delayEnd = System.nanoTime();
+		System.out.println(delayEnd-delayStart);
+		
 		ecrireQuery2(record);
 		
 		
@@ -129,29 +135,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	public static void getEmptyTaxis( DebsRecord record)
 	{
 		
-		currentTaxis.add(record);
-		int size =currentTaxis.size();
 		List<Integer> ind=new ArrayList<Integer>();
-		
-		
-//		// Here we fill the current Taxis which dropped and we remove the ones which are too old
-//		for (int i = 0; i< size;i++)
-//		{
-//			if (record.getDropoff_datetime()>currentTaxis.get(i).getDropoff_datetime()+epsilon)
-//			{
-//				currentTaxis.remove(i);
-//				break;
-//			}
-//			else
-//			{
-//			long tempsP = currentTaxis.get(i).getPickup_datetime();
-//			long tempsD = currentTaxis.get(i).getDropoff_datetime();
-//			GridPoint coordDrop = convert(currentTaxis.get(i).getDropoff_latitude(),currentTaxis.get(i).getDropoff_longitude());
-//			QuadrupleTimeGridTaxi quadrupleTimeGridTaxi = new QuadrupleTimeGridTaxi(tempsP,tempsD,coordDrop,currentTaxis.get(i).getMedallion());
-//			gridAndTaxis.add(quadrupleTimeGridTaxi);
-//			}
-//			
-//		}
 		
 		// Here we fill the current Taxis which picked and we remove the ones which are too old
 		currentTaxisPick.add(record);
@@ -178,9 +162,10 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 			}
 			else
 			{
-				for (int j=ind.size()-1;i>=0;i--)
+				for (int j=ind.size()-1;j>=0;j--)
 					{
 						currentTaxisPick.remove(ind.get(j));
+						
 					}
 			}
 			
@@ -188,7 +173,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		
 
 		
-			size= gridAndTaxis.size();
+			int size= gridAndTaxis.size();
 			List<String> taxiVus=new ArrayList<String>();
 			for (int i =size-1; i>=0;i--)
 			{
@@ -298,7 +283,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		String lineTemp = "";
 		
 		// ***** Début de la ligne *****
-		prefixe = ""+df.format(pickup).toString()+", "+ df.format(dropoff).toString();
+		prefixe = ""+df.format(pickup).toString()+", "+ df.format(dropoff).toString()+" ";
 		
 		for (int i = 0; i<10;i++)
 		{
@@ -326,7 +311,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		if (!lineTemp.equals(line))
 		{
 			line=lineTemp;
-			writeQuery2(prefixe+line+suffixe);
+			writeQuery2(prefixe+", "+line+suffixe);
 		}
 
 		
