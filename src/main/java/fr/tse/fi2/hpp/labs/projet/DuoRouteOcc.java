@@ -2,16 +2,27 @@ package fr.tse.fi2.hpp.labs.projet;
 
 import fr.tse.fi2.hpp.labs.beans.Route;
 
+/**
+ * Classe regroupant une route et le nombre de fois qu'elle apparait.
+ * @author Arnaud P
+ *
+ */
 public class DuoRouteOcc {
 
 	private Route route_;
 	private int nbOcc_;
 	
+	/**
+	 * Constructeur de la classe
+	 * @param r Une route
+	 * @param nb Le nombre d'occurence de cette route
+	 */
 	public DuoRouteOcc(Route r, int nb) {
 		// TODO Auto-generated constructor stub
 		this.route_=r;
 		this.nbOcc_=nb;
 	}
+	
 	
 	public Route getRoute() {
 		return route_;
@@ -26,7 +37,9 @@ public class DuoRouteOcc {
 		this.nbOcc_ = nbOcc_;
 	}
 
-
+	/**
+	 * Méthode pour incrementer le nombre d'occurence de la route
+	 */
 	public void incrementRouteOcc(){
 		this.nbOcc_++;
 	}
