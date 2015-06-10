@@ -6,6 +6,10 @@
 target/
 bin/
 result/
+<<<<<<< HEAD
+src/main/resources/
+=======
+>>>>>>> c549f1d85a6ad8a6c786280458c683172d587f1a
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

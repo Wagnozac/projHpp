@@ -84,19 +84,35 @@ public class Route {
 	private boolean valid(int x, int gridsize) {
 		return x > 0 && x <= gridsize;
 	}
-	
-	@Override
-	public boolean equals(Object other)
-	{
-		if (other == null) return false;
-	    if (other == this) return true;
-	    if (!(other instanceof Route))return false;
-	    Route r = (Route)other;
-	    if (this.getPickup().getX() == r.getPickup().getX() && this.getPickup().getY() == r.getPickup().getY()
-	    		&& this.getDropoff().getX() == r.getDropoff().getX() && this.getDropoff().getY() == r.getDropoff().getY())
-	    	return true;
-	    else return false;
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dropoff == null) ? 0 : dropoff.hashCode());
+		result = prime * result + ((pickup == null) ? 0 : pickup.hashCode());
+		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Route other = (Route) obj;
+		if (dropoff == null) {
+			if (other.dropoff != null)
+				return false;
+		} else if (!dropoff.equals(other.dropoff))
+			return false;
+		if (pickup == null) {
+			if (other.pickup != null)
+				return false;
+		} else if (!pickup.equals(other.pickup))
+			return false;
+		return true;
+	}
 }
