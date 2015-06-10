@@ -38,11 +38,27 @@ public class PaireGridTaxi implements java.lang.Comparable {
 		@Override
 		public int compareTo(Object other) 
 		{ 
-			int nombre1 = ((PaireGridTaxi) other).getTaxi(); 
-			int nombre2 = this.getTaxi(); 
+			GridPoint prep1 = ((PaireGridTaxi) other).getGrid();
+			GridPoint prep2= this.getGrid();
+			
+			if (prep1.getX()==prep2.getX())
+			{
+				int nombre1=prep1.getY();
+				int nombre2=prep2.getY();
+			    if (nombre1 > nombre2)  return -1; 
+			    else if(nombre1 == nombre2) return 0; 
+			    else return 1; 
+				
+			}
+			
+			else
+			{
+			int nombre1=prep1.getX();
+			int nombre2=prep2.getX();
 		    if (nombre1 > nombre2)  return -1; 
 		    else if(nombre1 == nombre2) return 0; 
 		    else return 1; 
+			}
 		   
 		}
 		
