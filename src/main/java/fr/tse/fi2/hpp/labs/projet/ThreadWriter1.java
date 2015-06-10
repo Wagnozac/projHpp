@@ -5,17 +5,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
-
+/**
+ * Classe permettant d'écrire dans dans un thread séparé le résultat de la Query 1
+ * @author Arnaud P
+ *
+ */
 public class ThreadWriter1 implements Runnable {
 	
 	BufferedWriter outputWriter;
 	LinkedBlockingQueue<String> q;
-	//public String poison;
 	
+	/**
+	 * Constructeur de la classe.
+	 * @param q file d'attente pour l'écriture
+	 */
 	public ThreadWriter1(LinkedBlockingQueue<String> q) {
 		super();
 		this.q=q;
-		//this.poison="";
 		try {
 			outputWriter = new BufferedWriter(new FileWriter(new File(
 					"result/projetQuery1.txt")));
@@ -26,19 +32,11 @@ public class ThreadWriter1 implements Runnable {
 		}
 	}
 
+	/**
+	 * Méthode utilisée lorsque le thread est lancé
+	 */
 	@Override
 	public void run() {
-		
-//		while (!poison.equals("poison")){
-//			try {	
-//				String line =q.take();
-//				writeLine(line);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//				
-//			}
-//		}
 		while(true)
 		{
 			try {
@@ -57,7 +55,10 @@ public class ThreadWriter1 implements Runnable {
 		finish();
 	}
 	
-	
+	/**
+	 * Méthode écrivant une ligne dans le fichier
+	 * @param line ligne à écrire dans le fichier
+	 */
 	public void writeLine(String line){
 		try {			
 			outputWriter.write(line);
@@ -66,7 +67,9 @@ public class ThreadWriter1 implements Runnable {
 		} catch (IOException e) {}		
 	}
 	
-	
+	/**
+	 * Méthode appellée à la fermeture du thread
+	 */
 	public void finish() {
 		// Close writer
 		try {
@@ -76,6 +79,10 @@ public class ThreadWriter1 implements Runnable {
 
 	}
 	
+	/**
+	 * Méthode pour ajouter une ligne à la file d'attente
+	 * @param s ligne à ajouter à la file d'attente
+	 */
 	public void add(String s)
 	{
 		q.add(s);

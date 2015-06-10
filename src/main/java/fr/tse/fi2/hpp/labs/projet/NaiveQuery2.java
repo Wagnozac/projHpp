@@ -254,6 +254,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 				ii++;
 			}	
 		}
+		
 			
 		Collections.sort(emptyTaxis);
 		Collections.sort(medianFare);

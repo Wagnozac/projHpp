@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.LoadFirstDispatcher;
-import fr.tse.fi2.hpp.labs.projet.Query1;
+import fr.tse.fi2.hpp.labs.projet.NaiveQuery2;
 import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 
 /**
@@ -36,12 +36,12 @@ public class MainNonStreaming {
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher and load everything
 		LoadFirstDispatcher dispatch = new LoadFirstDispatcher(
-				"src/main/resources/data/test_02.csv");
+				"src/main/resources/data/test_03.csv");
 		logger.info("Finished parsing");
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();
 		// Add you query processor here
-		Query1 m = new Query1(measure);
+		NaiveQuery2 m = new NaiveQuery2(measure);
 		processors.add(m);
 		
 		// Register query processors
