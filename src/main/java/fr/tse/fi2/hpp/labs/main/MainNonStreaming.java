@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.LoadFirstDispatcher;
+import fr.tse.fi2.hpp.labs.projet.Query1;
 import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
-import fr.tse.fi2.hpp.labs.queries.impl.SimpleQuerySumEvent;
-import fr.tse.fi2.hpp.labs.queries.impl.Lab3.SumQuery2;
-import fr.tse.fi2.hpp.labs.queries.impl.Lab3.ThreadWrite;
 
 /**
  * Main class of the program. Register your new queries here
@@ -38,15 +36,13 @@ public class MainNonStreaming {
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher and load everything
 		LoadFirstDispatcher dispatch = new LoadFirstDispatcher(
-				"src/main/resources/data/1000Records.csv");
+				"src/main/resources/data/test_01.csv");
 		logger.info("Finished parsing");
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();
 		// Add you query processor here
-		
-		
-		processors.add(new SumQuery2(measure));
-		
+		Query1 m = new Query1(measure);
+		processors.add(m);
 		
 		// Register query processors
 		for (AbstractQueryProcessor queryProcessor : processors) {

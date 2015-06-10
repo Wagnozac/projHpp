@@ -1,12 +1,6 @@
 package fr.tse.fi2.hpp.labs.queries;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,6 +13,7 @@ import fr.tse.fi2.hpp.labs.beans.GridPoint;
 import fr.tse.fi2.hpp.labs.beans.Route;
 import fr.tse.fi2.hpp.labs.beans.measure.QueryProcessorMeasure;
 import fr.tse.fi2.hpp.labs.dispatcher.StreamingDispatcher;
+import fr.tse.fi2.hpp.labs.projet.ThreadWriter1;
 import fr.tse.fi2.hpp.labs.queries.impl.Lab3.ThreadWriter;
 
 /**
@@ -54,9 +49,14 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 */
 	public final BlockingQueue<DebsRecord> eventqueue;
 	
+		
 	
 	public ThreadWriter Thread1;
 	public Thread Thread2;
+	
+	public final LinkedBlockingQueue<String> query1;
+	public ThreadWriter1 tw1;
+	public Thread threadQ1;
 	
 	/**
 	 * Global measurement
@@ -70,6 +70,8 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 */
 	private CountDownLatch latch;
 
+	
+
 	/**
 	 * Default constructor. Initialize event queue and writer
 	 */
@@ -79,9 +81,16 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		// Initialize queue
 		this.eventqueue = new LinkedBlockingQueue<>();
 		this.sumList=new LinkedBlockingQueue<String>();
+		
 		Thread1=new ThreadWriter(sumList,id);
 		Thread2=new Thread(Thread1);
 		Thread2.start();
+		
+		this.query1=new LinkedBlockingQueue<String>();
+		tw1= new ThreadWriter1(query1);
+		threadQ1 = new Thread(tw1);
+		threadQ1.start();
+		
 		// Initialize writer
 
 	}
@@ -140,6 +149,18 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		GridPoint dropoff = convert(lat2, long2);
 		return new Route(pickup, dropoff);
 	}
+	
+	protected Route convertRecordToRoute2(DebsRecord record) {
+		// Convert pickup coordinates into cell
+		float lat1 = record.getPickup_latitude();
+		float long1 = record.getPickup_longitude();
+		GridPoint pickup = convert2(lat1, long1);
+		// Convert dropoff coordinates into cell
+		float lat2 = record.getDropoff_latitude();
+		float long2 = record.getDropoff_longitude();
+		GridPoint dropoff = convert2(lat2, long2);
+		return new Route(pickup, dropoff);
+	}
 
 	/**
 	 * 
@@ -147,8 +168,12 @@ public abstract class AbstractQueryProcessor implements Runnable {
 	 * @param long1
 	 * @return The lat/long converted into grid coordinates
 	 */
-	private GridPoint convert(float lat1, float long1) {
-		return new GridPoint(cellX(lat1), cellY(long1));
+	protected GridPoint convert(float lat1, float long1) {
+		return new GridPoint(cellX(long1), cellY(lat1));
+	}
+	
+	private GridPoint convert2(float lat1, float long1) {
+		return new GridPoint(cellX2(long1), cellY2(lat1));
 	}
 
 	/**
@@ -162,6 +187,18 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		// double x=0;
 		double x_0 = -74.913585;
 		double delta_x = 0.005986 / 2;
+
+		// double cell_x;
+		Double cell_x = 1 + Math.floor(((x - x_0) / delta_x) + 0.5);
+
+		return cell_x.intValue();
+	}
+	
+	private int cellX2(float x) {
+
+		// double x=0;
+		double x_0 = -74.913585;
+		double delta_x = 0.005986;
 
 		// double cell_x;
 		Double cell_x = 1 + Math.floor(((x - x_0) / delta_x) + 0.5);
@@ -185,6 +222,18 @@ public abstract class AbstractQueryProcessor implements Runnable {
 		return cell_y.intValue();
 
 	}
+	
+	private int cellY2(double y) {
+
+		double y_0 = 41.474937;
+		double delta_y = 0.004491556;
+
+		Double cell_y = 1 + Math.floor(((y_0 - y) / delta_y) + 0.5);
+
+		return cell_y.intValue();
+
+	}
+
 
 	/**
 	 * @return the id of the query processor
@@ -205,11 +254,14 @@ public abstract class AbstractQueryProcessor implements Runnable {
 
 	}
 
-	
+	protected void writeQuery1(String line){
+		query1.add(line);
+	}
 	protected void finish(){
 		measure.notifyFinish(this.id);
 		latch.countDown();
 		Thread1.poison=true;
+		tw1.add("poison");
 	}
 
 }
