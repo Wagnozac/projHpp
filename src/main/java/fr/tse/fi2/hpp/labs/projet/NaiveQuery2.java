@@ -232,7 +232,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		for (int i = 0; i<medianFare.size();i++)
 			{
 				medianFareGrid.add(medianFare.get(i).getGrid());
-				System.out.println("valeur: "+medianFareGrid.get(i).getX() + " " + medianFareGrid.get(i).getY());
+//				System.out.println("valeur: "+medianFareGrid.get(i).getX() + " " + medianFareGrid.get(i).getY());
 			}
 			
 		for (int j=0; j<emptyTaxis.size();j++)
@@ -241,13 +241,13 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 			}
 			
 		int ii=0;
-		System.out.println("emptytaxgrid"+emptyTaxisGrid.size());
-		System.out.println("medianfaregrid"+medianFareGrid.size());
+//		System.out.println("emptytaxgrid"+emptyTaxisGrid.size());
+//		System.out.println("medianfaregrid"+medianFareGrid.size());
 		while (emptyTaxis.size()!=medianFare.size())
 		{
-			System.out.println(ii);
-			System.out.println("emptytax"+emptyTaxis.size());
-			System.out.println("medianfare"+medianFare.size());
+//			System.out.println(ii);
+//			System.out.println("emptytax"+emptyTaxis.size());
+//			System.out.println("medianfare"+medianFare.size());
 			
 			if (!emptyTaxisGrid.contains(medianFareGrid.get(ii)))
 			{
