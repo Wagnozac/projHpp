@@ -34,14 +34,29 @@ public class MainStreaming {
 		// Init query time measure
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher
+<<<<<<< HEAD
 		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/test_01.csv");
+=======
+<<<<<<< HEAD
+		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/100k.csv");
+
+
+=======
+		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/test_03.csv");
+>>>>>>> 46118558b92c08f1211a5c821136059abab22364
+>>>>>>> 02b3d019d9bdeb9e6c9528d21c1a382f5507b626
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();
 		// Add you query processor here
 
 		Query1v2 q = new Query1v2(measure);
 		processors.add(q);
+<<<<<<< HEAD
+
+
+=======
 		
+>>>>>>> 46118558b92c08f1211a5c821136059abab22364
 		// Register query processors
 		for (AbstractQueryProcessor queryProcessor : processors) {
 			dispatch.registerQueryProcessor(queryProcessor);
