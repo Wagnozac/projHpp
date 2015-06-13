@@ -43,6 +43,11 @@ public class DuoRouteOcc {
 	public void incrementRouteOcc(){
 		this.nbOcc_++;
 	}
+	
+	public void decrementRouteOcc()
+	{
+		this.nbOcc_--;
+	}
 
 	@Override
 	public int hashCode() {

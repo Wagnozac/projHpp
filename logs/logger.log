@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-[17:57:41] [INFO ] (AbstractQueryProcessor.java:run:115) Starting query processor 1
-[17:57:41] [INFO ] (StreamingDispatcher.java:run:29) Starting dispatcher
-[17:57:41] [INFO ] (StreamingDispatcher.java:run:48) Sending poison pill
-[17:57:41] [INFO ] (AbstractQueryProcessor.java:run:136) Closing query processor 1
-=======
-[18:53:23] [INFO ] (StreamingDispatcher.java:run:29) Starting dispatcher
-[18:53:23] [INFO ] (AbstractQueryProcessor.java:run:115) Starting query processor 1
-[18:53:28] [INFO ] (StreamingDispatcher.java:run:48) Sending poison pill
->>>>>>> 02b3d019d9bdeb9e6c9528d21c1a382f5507b626
+[21:19:20] [INFO ] (AbstractQueryProcessor.java:run:115) Starting query processor 1
+[21:19:20] [INFO ] (StreamingDispatcher.java:run:29) Starting dispatcher
+[21:19:21] [INFO ] (StreamingDispatcher.java:run:48) Sending poison pill
+[21:19:21] [INFO ] (AbstractQueryProcessor.java:run:136) Closing query processor 1
