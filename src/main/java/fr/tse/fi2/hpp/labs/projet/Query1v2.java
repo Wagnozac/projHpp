@@ -22,7 +22,7 @@ public class Query1v2 extends AbstractQueryProcessor {
 	public Query1v2(QueryProcessorMeasure measure) {
 		super(measure);
 		rec_= new ArrayList<DebsRecord>();
-		route_= new ArrayList<DuoRouteOcc>();
+	//	route_= new ArrayList<DuoRouteOcc>();
 		currentBest_ = new ArrayList<DuoRouteOcc>();
 		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
@@ -32,42 +32,50 @@ public class Query1v2 extends AbstractQueryProcessor {
 		
 		// ***** Début mesure du delay *****
 		long delayStart = System.nanoTime();
-		
+		route_= new ArrayList<DuoRouteOcc>();
 		Route r = this.convertRecordToRoute2(record);
 		DuoRouteOcc currentDuo = new DuoRouteOcc(r,1);
 		
-		
+//		System.out.println("taille record : "+rec_.size());
 		// ***** La route est-elle dans la grille ? *****
 		if(r.isValid(300))
 		{
 			rec_.add(record);
+//			System.out.println(df.format(new Date(record.getDropoff_datetime()))+" ADD");
 			
 			// ***** Suppression des records superflus
 			while (record.getDropoff_datetime() > rec_.get(0).getDropoff_datetime()+1800000)
 			{
+//				System.out.println(df.format(new Date(record.getDropoff_datetime()))+" RM");
 				rec_.remove(0);
 			}
 			
 			// ***** Parcours liste de records *****
 			for (int i=0; i<rec_.size();i++)
 			{
+				
 				// ***** Test si la route est présente et à quel indice *****
 				int ind = route_.indexOf(currentDuo);
+//				System.out.println(df.format(new Date(record.getDropoff_datetime()))+" "+ind);
 				if(ind != -1)
 				{
 					// ***** Si route déjà présente on incrémente son nombre d'occurence *****
 					route_.get(ind).incrementRouteOcc();
+//					System.out.println(df.format(new Date(record.getDropoff_datetime()))+" incrément");
 				}
 				else
 				{
 					// ***** Sinon on l'ajoute à la liste *****
 					route_.add(currentDuo);
+//					System.out.println(df.format(new Date(record.getDropoff_datetime()))+" Ajout");
 				}	
 			}
 
 			
 			// ***** On trie la liste de route en fonction du nombre d'occurences par ordre décroissant *****
 			Collections.sort(route_, new ComparateurDuoRouteOcc());
+			
+//			System.out.println("taille : "+route_.size());
 			
 			// ***** Gestion des cas ou on a plus de 10 routes *****
 			if (route_.size()>10)
