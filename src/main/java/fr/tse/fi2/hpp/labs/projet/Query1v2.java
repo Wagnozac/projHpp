@@ -15,25 +15,28 @@ import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 public class Query1v2 extends AbstractQueryProcessor {
 
 	private List<DebsRecord> rec_=null;
-	private List<DuoRouteOcc> route_;
-	private List<DuoRouteOcc> currentBest_;
+	private List<TripleRouteDropOcc> route_;
+	private List<TripleRouteDropOcc> currentBest_;
 	private final DateFormat df;
+	private int compteur_;
 	
 	public Query1v2(QueryProcessorMeasure measure) {
 		super(measure);
 		rec_= new ArrayList<DebsRecord>();
-		route_= new ArrayList<DuoRouteOcc>();
-		currentBest_ = new ArrayList<DuoRouteOcc>();
+		route_= new ArrayList<TripleRouteDropOcc>();
+		currentBest_ = new ArrayList<TripleRouteDropOcc>();
+		compteur_=0;
 		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	@Override
 	protected void process(DebsRecord record) {
 		
+		compteur_++;
 		// ***** Début mesure du delay *****
 		long delayStart = System.nanoTime();
 		Route r = this.convertRecordToRoute2(record);
-		DuoRouteOcc currentDuo = new DuoRouteOcc(r,1);
+		TripleRouteDropOcc currentDuo = new TripleRouteDropOcc(r,compteur_,1);
 		
 		// ***** La route est-elle dans la grille ? *****
 		if(r.isValid(300))
@@ -45,7 +48,7 @@ public class Query1v2 extends AbstractQueryProcessor {
 			while (record.getDropoff_datetime() > rec_.get(0).getDropoff_datetime()+1800000)
 			{
 				// ***** Gestion de la liste de route *****
-				int ind = route_.indexOf(new DuoRouteOcc(this.convertRecordToRoute2(rec_.get(0)),1));
+				int ind = route_.indexOf(new TripleRouteDropOcc(this.convertRecordToRoute2(rec_.get(0)),1,1));
 				route_.get(ind).decrementRouteOcc();  
 				if (route_.get(ind).getNbOcc() <= 0)
 					route_.remove(ind);
@@ -71,7 +74,7 @@ public class Query1v2 extends AbstractQueryProcessor {
 
 			
 			// ***** On trie la liste de route en fonction du nombre d'occurences par ordre décroissant *****
-			Collections.sort(route_, new ComparateurDuoRouteOcc());
+			Collections.sort(route_, new ComparateurTripleRouteDropOcc());
 			
 			
 			// ***** Gestion des cas ou on a plus de 10 routes *****
@@ -113,7 +116,7 @@ public class Query1v2 extends AbstractQueryProcessor {
 				// ***** Début de la ligne *****
 				String line = ""+df.format(pickup).toString()+","+ df.format(dropoff).toString();
 				
-				// ***** Remplissage des données *****
+				// ***** Remplissage des données des routes *****
 				for (int i=0;i<route_.size();i++)
 				{
 					line = line+","+route_.get(i).getRoute().getPickup().getX()+"."+route_.get(i).getRoute().getPickup().getY()+","

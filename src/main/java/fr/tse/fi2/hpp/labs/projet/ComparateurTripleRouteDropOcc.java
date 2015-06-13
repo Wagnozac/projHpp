@@ -8,9 +8,9 @@ import java.util.Comparator;
  * @author Arnaud P
  *
  */
-public class ComparateurDuoRouteOcc implements Comparator<DuoRouteOcc> {
+public class ComparateurTripleRouteDropOcc implements Comparator<TripleRouteDropOcc> {
 
-	public ComparateurDuoRouteOcc() {
+	public ComparateurTripleRouteDropOcc() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -19,10 +19,14 @@ public class ComparateurDuoRouteOcc implements Comparator<DuoRouteOcc> {
 	 * faire un tri décroissant.
 	 */
 	@Override
-	public int compare(DuoRouteOcc o1, DuoRouteOcc o2) {
+	public int compare(TripleRouteDropOcc o1, TripleRouteDropOcc o2) {
 		if (o1.getNbOcc() > o2.getNbOcc())
 			return -1;
 		else if (o1.getNbOcc() < o2.getNbOcc())
+			return 1;
+		else if (o1.getNbOcc() == o2.getNbOcc() && o1.getCompte() > o2.getCompte())
+			return -1;
+		else if (o1.getNbOcc() == o2.getNbOcc() && o1.getCompte() < o2.getCompte())
 			return 1;
 		else return 0;
 	}
