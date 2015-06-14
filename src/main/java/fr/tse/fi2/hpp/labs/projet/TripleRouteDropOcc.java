@@ -7,34 +7,36 @@ import fr.tse.fi2.hpp.labs.beans.Route;
  * @author Arnaud P
  *
  */
-public class DuoRouteOcc {
+public class TripleRouteDropOcc {
 
-	private Route route_;
+	private final Route route_;
 	private int nbOcc_;
+	private final int compteur_;
 	
 	/**
 	 * Constructeur de la classe
 	 * @param r Une route
 	 * @param nb Le nombre d'occurence de cette route
+	 * @param compteur Permet de savoir quelle instance est la plus récente
 	 */
-	public DuoRouteOcc(Route r, int nb) {
+	public TripleRouteDropOcc(Route r, int compteur, int nb) {
 		// TODO Auto-generated constructor stub
 		this.route_=r;
 		this.nbOcc_=nb;
+		this.compteur_=compteur;
 	}
 	
 	
 	public Route getRoute() {
 		return route_;
 	}
-	public void setRoute(Route route_) {
-		this.route_ = route_;
-	}
+	
 	public int getNbOcc() {
 		return nbOcc_;
 	}
-	public void setNbOcc(int nbOcc_) {
-		this.nbOcc_ = nbOcc_;
+
+	public long getCompte(){
+		return compteur_;
 	}
 
 	/**
@@ -42,6 +44,14 @@ public class DuoRouteOcc {
 	 */
 	public void incrementRouteOcc(){
 		this.nbOcc_++;
+	}
+	
+	/**
+	 *  Méthode pour décrémenter le nombtre d'occurence de la route
+	 */
+	public void decrementRouteOcc()
+	{
+		this.nbOcc_--;
 	}
 
 	@Override
@@ -60,7 +70,7 @@ public class DuoRouteOcc {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DuoRouteOcc other = (DuoRouteOcc) obj;
+		TripleRouteDropOcc other = (TripleRouteDropOcc) obj;
 		if (route_ == null) {
 			if (other.route_ != null)
 				return false;

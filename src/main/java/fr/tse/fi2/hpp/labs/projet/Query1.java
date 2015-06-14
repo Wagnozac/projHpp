@@ -16,7 +16,7 @@ import fr.tse.fi2.hpp.labs.queries.AbstractQueryProcessor;
 public class Query1 extends AbstractQueryProcessor {
 
 	private List<DebsRecord> rec_=null;
-	private List<DuoRouteOcc> route_;
+	private List<TripleRouteDropOcc> route_;
 	private List<Route> currentBest_;
 	private boolean found;
 	private boolean changement;
@@ -69,7 +69,7 @@ public class Query1 extends AbstractQueryProcessor {
 					// ***** Si la route n'existe pas déjà, on l'ajoute *****
 					if (!found)
 					{
-						route_.add(new DuoRouteOcc(r,1));						
+						route_.add(new TripleRouteDropOcc(r,1,1));						
 					}
 					else
 						found=false;					
@@ -88,9 +88,9 @@ public class Query1 extends AbstractQueryProcessor {
 			}
 			
 			// ***** On trie la liste de route en fonction du nombre d'occurences par ordre décroissant *****
-			Collections.sort(route_, new Comparator<DuoRouteOcc>()
+			Collections.sort(route_, new Comparator<TripleRouteDropOcc>()
 					{
-						public int compare(DuoRouteOcc o1, DuoRouteOcc o2) 
+						public int compare(TripleRouteDropOcc o1, TripleRouteDropOcc o2) 
 						{
 							if (o1.getNbOcc() > o2.getNbOcc())
 								return -1;

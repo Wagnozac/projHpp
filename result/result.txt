@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Global execution time 354ms
 Query 1 runtime: 320ms
 Query 1 throughput: 0 events/second
+=======
+Global execution time 242ms
+Query 1 runtime: 125ms
+Query 1 throughput: 1 events/second
+>>>>>>> e1ad96e59bbaa35777c8d0235ae7364b05e19c68
