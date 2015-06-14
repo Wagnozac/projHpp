@@ -7,8 +7,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.lang.Math;
 
 import fr.tse.fi2.hpp.labs.beans.DebsRecord;
@@ -42,7 +44,7 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		currentRecs=new ArrayList<DebsRecord>();
 		gridAndMoney=new ArrayList<PaireGridMoney>();
 		medianFare=new ArrayList<PaireGridMoney>();
-		mostProfitableAreas=new ArrayList<QuadGridRatioTaxiMedian>();
+		mostProfitableAreas=new ArrayList<QuadGridRatioTaxiMedian>();// à réécrire FIRST!!!!!!!!!!!! avec des hashmap ouech!
 		emptyTaxis=new ArrayList<PaireGridTaxi>();
 		//currentTaxis=new ArrayList<DebsRecord>();
 		currentTaxisPick=new ArrayList<DebsRecord>();
@@ -55,7 +57,9 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 		// TODO Auto-generated method stub
 		long delayStart = System.nanoTime();
 		medianFare.clear();
+		gridAndMoney.clear();
 		getMedianFare(record);
+		gridAndTaxis.clear();
 		emptyTaxis.clear();
 		getEmptyTaxis(record);
 		mostProfitableAreas.clear();
@@ -209,51 +213,98 @@ public class NaiveQuery2 extends AbstractQueryProcessor {
 	{
 		
 	
-		Map<Integer,GridPoint> medianFareGrid=new HashMap<Integer,GridPoint>();
-		Map<Integer,GridPoint> emptyTaxisGrid=new HashMap<Integer,GridPoint>();
-		
-		for (int i = 0; i<medianFare.size();i++)
-			{
-				medianFareGrid.put(i,medianFare.get(i).getGrid());
+		//Map<Integer,GridPoint> medianFareGrid=new HashMap<Integer,GridPoint>();
+		//Map<Integer,GridPoint> emptyTaxisGrid=new HashMap<Integer,GridPoint>();
+		List<PaireGridTaxi> medianFareGrid=new ArrayList<PaireGridTaxi>();
+		List<PaireGridMoney> emptyTaxisGrid=new ArrayList<PaireGridMoney>();
+//		medianFareGrid.clear();
+//		emptyTaxisGrid.clear();
+//		Set<GridPoint> set1 = new HashSet<GridPoint>() ;
+//		Set<GridPoint> set2 = new HashSet<GridPoint>() ;
 
-			}
-			
-		for (int j=0; j<emptyTaxis.size();j++)
+		for (int i = medianFare.size()-1; i>=0;i--)
 			{
-				emptyTaxisGrid.put(j,emptyTaxis.get(j).getGrid());
-				//System.out.println("taxi X : " + emptyTaxis.get(j).getGrid().getX() +"taxi Y : " + emptyTaxis.get(j).getGrid().getY());
+
+				medianFareGrid.add(new PaireGridTaxi(medianFare.get(i).getGrid(),0)); // nécessaire pour pouvoir utiliser contains 
+//				System.out.println("sous X : " + medianFareGrid.get(medianFare.size()-1-i).getGrid().getX() +"sous Y : " + medianFareGrid.get(medianFare.size()-1-i).getGrid().getY());
 			}
 			
-		int ii=0;
+		for (int j = emptyTaxis.size()-1; j>=0;j--)
+			{
+
+				emptyTaxisGrid.add(new PaireGridMoney(emptyTaxis.get(j).getGrid(),0));// nécessaire pour pouvoir utiliser contains 
+//				System.out.println("taxi X : " + emptyTaxis.get(j).getGrid().getX() +"taxi Y : " + emptyTaxis.get(j).getGrid().getY());
+		}
+			
+		
+		//int ii=0;
 		//System.out.println("Taille empty taxis : " + emptyTaxis.size());
 		
 		//System.out.println("Taille median fare : " + medianFare.size());
-
-		while (emptyTaxis.size()!=medianFare.size())
+		
+		
+		for (int j =emptyTaxis.size()-1; j>=0;j--)
 		{
-			
-			if (emptyTaxis.size()>medianFare.size())
-			{
-				if (!medianFareGrid.containsValue(emptyTaxisGrid.get(ii)))
-						{
-								emptyTaxis.remove(ii);
-						}
-			}
-			
-			else if (!emptyTaxisGrid.containsValue(medianFareGrid.get(ii)))
-			{
-				emptyTaxis.add(new PaireGridTaxi(medianFare.get(ii).getGrid(),0));
-				//System.out.println("X: "+emptyTaxis.get(ii).getGrid().getX()+ " Y: "+ emptyTaxis.get(ii).getGrid().getY());
-				ii++;
-				
-			}
-			else
-			{
-				
-				
-				ii++;
-			}	
+				if (!medianFare.contains(emptyTaxisGrid.get(j)))
+				{
+					emptyTaxis.remove(j);
+				}
+
 		}
+
+//		System.out.println("Taille empty taxis1 : " + emptyTaxis.size());
+//		
+//		System.out.println("Taille median fare1 : " + medianFare.size());
+		for (int j =0; j<medianFare.size();j++)
+		{
+
+				if (!emptyTaxis.contains(medianFareGrid.get(j)))
+				{
+					
+					emptyTaxis.add(new PaireGridTaxi(medianFareGrid.get(j).getGrid(),0));
+
+				}
+
+		}
+//		System.out.println("Taille empty taxis : " + emptyTaxis.size());
+//		
+//		System.out.println("Taille median fare : " + medianFare.size());
+		
+		
+		
+
+//		while (emptyTaxis.size()!=medianFare.size())
+//		{
+//			//System.out.println("Taille empty taxis : " + emptyTaxis.size());
+//			
+//			//System.out.println("Taille median fare : " + medianFare.size());
+//			
+//			//System.out.println("indice : " + ii);
+//
+//			
+//			if (!medianFareGrid.contains(emptyTaxisGrid.get(ii)))
+//			{
+//						{
+//								emptyTaxis.remove(ii);
+//								ii++;
+//						}
+//				
+//			}
+//			
+//			if (!emptyTaxisGrid.contains(medianFareGrid.get(ii)))
+//			{
+//				emptyTaxis.add(new PaireGridTaxi(medianFare.get(ii).getGrid(),0));
+//				//System.out.println("X: "+emptyTaxis.get(ii).getGrid().getX()+ " Y: "+ emptyTaxis.get(ii).getGrid().getY());
+//				ii++;
+//				
+//			}
+//			else
+//			{
+//				
+//				
+//				ii++;
+//			}	
+//		}
 		
 			
 		Collections.sort(emptyTaxis);

@@ -23,7 +23,9 @@ public class PaireGridMoney implements java.lang.Comparable {
 		return money;
     }
     
-    public void setGrid(GridPoint grid)
+    
+
+	public void setGrid(GridPoint grid)
     {
 		this.grid=grid;
     }
@@ -57,6 +59,35 @@ public class PaireGridMoney implements java.lang.Comparable {
 	    else if(nombre1 == nombre2) return 0; 
 	    else return 1; 
 		}
+		
+		
 	   
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((grid == null) ? 0 : grid.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PaireGridMoney other = (PaireGridMoney) obj;
+		if (grid == null) {
+			if (other.grid != null)
+				return false;
+		} else if (!grid.equals(other.grid))
+			return false;
+		return true;
+	}
+    
+    
 }
