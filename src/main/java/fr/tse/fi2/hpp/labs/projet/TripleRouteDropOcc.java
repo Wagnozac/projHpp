@@ -17,6 +17,7 @@ public class TripleRouteDropOcc {
 	 * Constructeur de la classe
 	 * @param r Une route
 	 * @param nb Le nombre d'occurence de cette route
+	 * @param compteur Permet de savoir quelle instance est la plus récente
 	 */
 	public TripleRouteDropOcc(Route r, int compteur, int nb) {
 		// TODO Auto-generated constructor stub
