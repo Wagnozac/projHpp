@@ -34,7 +34,7 @@ public class MainStreaming {
 		// Init query time measure
 		QueryProcessorMeasure measure = new QueryProcessorMeasure();
 		// Init dispatcher
-		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/test_02.csv");
+		StreamingDispatcher dispatch = new StreamingDispatcher("src/main/resources/data/sorted_data.csv");
 
 		// Query processors
 		List<AbstractQueryProcessor> processors = new ArrayList<>();

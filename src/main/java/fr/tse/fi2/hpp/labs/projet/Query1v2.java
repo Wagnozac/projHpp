@@ -49,9 +49,13 @@ public class Query1v2 extends AbstractQueryProcessor {
 			{
 				// ***** Gestion de la liste de route *****
 				int ind = route_.indexOf(new TripleRouteDropOcc(this.convertRecordToRoute2(rec_.get(0)),1,1));
-				route_.get(ind).decrementRouteOcc();  
-				if (route_.get(ind).getNbOcc() <= 0)
-					route_.remove(ind);
+				if (ind != -1)
+				{
+					route_.get(ind).decrementRouteOcc();  
+				
+					if (route_.get(ind).getNbOcc() <= 0)
+						route_.remove(ind);
+				}
 				
 				// ***** Suppression des records superflus *****
 				rec_.remove(0);
